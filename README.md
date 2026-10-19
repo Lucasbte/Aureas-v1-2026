@@ -1,9 +1,5 @@
 # Aureas (Python)
 
-Unsupervised multi-species call recognition for passive acoustic monitoring:
-segmentation of the spectrogram, cepstral features and LAMDA 3π fuzzy
-clustering, without labels and without fixing the number of clusters.
-
 Python port of the MATLAB application described in
 
 > Guerrero, M. J., Bedoya, C. L., López, J. D., Daza, J. M., & Isaza, C. (2023).
