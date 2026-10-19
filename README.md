@@ -21,8 +21,8 @@ or swap any stage:
 ## Install
 
 ```bash
-git clone https://github.com/<user>/aureas-py.git
-cd aureas-py
+git clone https://github.com/mariajguerrerom/Aureas-v1-2026.git
+cd Aureas-v1-2026
 conda create -n aureas python=3.11 -y      # or: python3 -m venv .venv && source .venv/bin/activate
 conda activate aureas
 python -m pip install -r requirements.txt  # pipeline + dashboard + notebooks + the package itself (editable)
