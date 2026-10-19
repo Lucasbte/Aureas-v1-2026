@@ -1,9 +1,5 @@
 # Aureas (Python)
 
-Unsupervised multi-species call recognition for passive acoustic monitoring:
-segmentation of the spectrogram, cepstral features and LAMDA 3π fuzzy
-clustering, without labels and without fixing the number of clusters.
-
 Python port of the MATLAB application described in
 
 > Guerrero, M. J., Bedoya, C. L., López, J. D., Daza, J. M., & Isaza, C. (2023).
@@ -20,7 +16,6 @@ or swap any stage:
 | 3. Features (Fdom, Fmin, Fmax + 23 LFCC) | `aureas.extract_features` | `Segmentacion.m`, `fcc5.m` |
 | 4. Min–max scaling to [0, 1] | `aureas.MinMaxScaler` | `NormMinMax.m` (formerly `ZscoreMV.m`) |
 | 5. LAMDA 3π clustering | `aureas.LAMDA` | `LAMDA_unsup.m` |
-| 6. Cluster quality | `aureas.validation` | `ComputeCV.m`, `IndiceSimilitud.m` |
 | Search for saved sonotypes | `aureas.search` | `Metodologia_prueba.m`, `mLAMDA_fuzzy_3pi_apract.m`, `Filtro2_Clases.m` |
 | Browse results, listen | `aureas dashboard` | `ClasesTablaPrueba`, `Analysis`, `Representative` GUIs |
 
@@ -86,11 +81,9 @@ useful ones:
 | `n_jobs` | 4 | parallel workers for segmentation |
 | `band` | `null` | `[fmin, fmax]` in Hz to keep only events inside a band |
 | `lamda.n_iter` | 10 | passes of LAMDA over the data |
-| `lamda.alpha_cut` | 0.8 | segments whose maximum membership is below it go to the NIC |
 | `lamda.mad` | `binomial` | marginal adequacy degree: `binomial` or `gauss` |
 | `lamda.gad` | `3pi` | global adequacy degree: `3pi`, `minmax` or `sumprob` |
 | `lamda.ex_level` | 1.0 | exigency level for `minmax` and `sumprob` |
-| `evaluation.stability_runs` | 5 | extra LAMDA runs in random order to measure cluster stability; set 0 on large datasets |
 | `export.memberships_csv` | `true` | write `Memberships.csv` (one column per class; can be tens of GB) |
 
 ### Large datasets
