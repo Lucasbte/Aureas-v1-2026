@@ -9,15 +9,14 @@ Python port of the MATLAB application described in
 Each step of the pipeline is a plain function, so you can run the whole thing
 or swap any stage:
 
-| Step | Function | MATLAB original |
-|---|---|---|
-| 1. Spectrogram + denoising | `aureas.denoise` | `seg_xie.m`, `withoutSubbandModeIntensities.m` |
-| 2. Segmentation | `aureas.detect_events` | `seg_xie.m` (Otsu + morphology) |
-| 3. Features (Fdom, Fmin, Fmax + 23 LFCC) | `aureas.extract_features` | `Segmentacion.m`, `fcc5.m` |
-| 4. Min–max scaling to [0, 1] | `aureas.MinMaxScaler` | `NormMinMax.m` (formerly `ZscoreMV.m`) |
-| 5. LAMDA 3π clustering | `aureas.LAMDA` | `LAMDA_unsup.m` |
-| Search for saved sonotypes | `aureas.search` | `Metodologia_prueba.m`, `mLAMDA_fuzzy_3pi_apract.m`, `Filtro2_Clases.m` |
-| Browse results, listen | `aureas dashboard` | `ClasesTablaPrueba`, `Analysis`, `Representative` GUIs |
+| Step | Function |
+|---|---|
+| 1. Spectrogram + denoising | `aureas.denoise` |
+| 2. Segmentation | `aureas.detect_events` |
+| 3. Features (Fdom, Fmin, Fmax + 23 LFCC) | `aureas.extract_features` |
+| 4. Min–max scaling to [0, 1] | `aureas.MinMaxScaler` |
+| 5. LAMDA 3π clustering | `aureas.LAMDA` |
+| Browse results, listen | `aureas dashboard` |
 
 ## Install
 
@@ -35,14 +34,8 @@ dependencies.
 ## Use
 
 ```bash
-# 1. explore a folder (all sub-folders are included); writes a run folder and opens the dashboard
+# explore a folder (all sub-folders are included); writes a run folder and opens the dashboard
 aureas explore /path/to/recordings -o results -j 4
-
-# 2. in the dashboard, name clusters and "Save cluster as sonotype in library"
-#    (saved to results/sonotypes.json)
-
-# 3. look for those sonotypes in new recordings
-aureas search /path/to/new_recordings results/sonotypes.json -s "Leucostethus jota"
 
 # reopen any run
 aureas dashboard results/2026-10-10_21-44-12_explore_recordings
@@ -51,7 +44,7 @@ aureas dashboard results/2026-10-10_21-44-12_explore_recordings
 aureas export results/2026-10-10_21-44-12_explore_recordings [--no-memberships]
 ```
 
-Or edit `config.yaml` and run `python run_pipeline.py` (bacpipe style). From Python:
+Or edit `config.yaml` and run `python run_pipeline.py`. From Python:
 
 ```python
 import aureas
@@ -111,7 +104,7 @@ Each call to `aureas.explore` or `aureas.search` saves a new folder
 `results_dir`). Runs in the same second receive a suffix and never overwrite
 each other.
 
-* `Classification_<mm-dd-yyyy_HH-MM-SS>.csv`: same columns as the MATLAB Excel
+* `Classification_<mm-dd-yyyy_HH-MM-SS>.csv`: 
   (`File, Month, Day, Hour, Minute, Start, End, Length, Fdom, FminVoc, FmaxVoc, Fmin, Fmax, Class, [ClassName,] Membership`),
   followed by `Label` (names given in the dashboard), `SegmentID, Year, Second, Datetime, Site, Path, SampleRate, MembershipAssigned, IsRepresentative`.
   `Class` uses MATLAB numbering: **1 = NIC** (segments not assigned to any cluster).
