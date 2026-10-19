@@ -1,0 +1,149 @@
+Metadata-Version: 2.4
+Name: aureas
+Version: 0.1.0
+Summary: Unsupervised multi-species call recognition for passive acoustic monitoring (segmentation + LFCC + LAMDA 3-pi)
+Author: Maria J. Guerrero
+License: MIT
+Requires-Python: >=3.9
+Description-Content-Type: text/markdown
+Requires-Dist: numpy>=1.22
+Requires-Dist: scipy>=1.8
+Requires-Dist: pandas>=1.4
+Requires-Dist: scikit-learn>=1.0
+Requires-Dist: soundfile>=0.12
+Requires-Dist: pyyaml>=6
+Requires-Dist: matplotlib>=3.5
+Requires-Dist: streamlit>=1.35
+Provides-Extra: dev
+Requires-Dist: pytest; extra == "dev"
+
+# Aureas (Python)
+
+Unsupervised multi-species call recognition for passive acoustic monitoring.
+Python port of the MATLAB application described in
+
+> Guerrero, M. J., Bedoya, C. L., López, J. D., Daza, J. M., & Isaza, C. (2023).
+> Acoustic animal identification using unsupervised learning.
+> *Methods in Ecology and Evolution*, 14, 1500–1514. https://doi.org/10.1111/2041-210X.14103
+
+Each step of the pipeline is a plain function, so you can run the whole thing
+or swap any stage:
+
+| Step | Function | MATLAB original |
+|---|---|---|
+| 1. Spectrogram + denoising | `aureas.denoise` | `seg_xie.m`, `withoutSubbandModeIntensities.m` |
+| 2. Segmentation | `aureas.detect_events` | `seg_xie.m` (Otsu + morphology) |
+| 3. Features (Fdom, Fmin, Fmax + 23 LFCC) | `aureas.extract_features` | `Segmentacion.m`, `fcc5.m` |
+| 4. Min–max scaling to [0, 1] | `aureas.MinMaxScaler` | `NormMinMax.m` (formerly `ZscoreMV.m`) |
+| 5. LAMDA 3π clustering | `aureas.LAMDA` | `LAMDA_unsup.m` |
+| 6. Cluster quality | `aureas.validation` | `ComputeCV.m`, `IndiceSimilitud.m` |
+| Search for saved sonotypes | `aureas.search` | `Metodologia_prueba.m`, `mLAMDA_fuzzy_3pi_apract.m`, `Filtro2_Clases.m` |
+| Browse results, listen | `aureas dashboard` | `ClasesTablaPrueba`, `Analysis`, `Representative` GUIs |
+
+## Install
+
+```bash
+cd aureas-py
+pip install -e .            # Python ≥ 3.9
+```
+
+## Use
+
+```bash
+# 1. explore a folder (recursive); writes a run folder and opens the dashboard
+aureas explore /path/to/recordings -o resultados -j 4
+
+# 2. in the dashboard, name clusters and "Save cluster as sonotype in library"
+#    (saved to resultados/sonotypes.json)
+
+# 3. look for those sonotypes in new recordings
+aureas search /path/to/new_recordings resultados/sonotypes.json -s "Leucostethus jota"
+
+# reopen any run
+aureas dashboard resultados/2026-10-10_21-44-12_explore_recordings
+```
+
+Or edit `config.yaml` and run `python run_pipeline.py` (bacpipe style). From Python:
+
+```python
+import aureas
+res = aureas.explore("/path/to/recordings")  # automatically saves under ./resultados/
+res.clusters          # one row per class: size, stability, cohesion, Fdom, representative…
+res.table()           # segments, MATLAB Excel columns first
+```
+
+See `examples/quickstart.py` for the step-by-step version.
+
+## Outputs
+
+Each call to `aureas.explore` or `aureas.search` automatically saves a new folder
+`resultados/<YYYY-MM-DD_HH-MM-SS>_<explore|search>_<audio folder>/` relative to
+the current working directory. Pass `results_dir` to choose another location.
+Runs in the same second receive a suffix and never overwrite each other.
+No extra notebook cell or Excel dependency is needed.
+
+* `Resultados_completos.csv`: every segment, its classification, and all 26 raw
+  features (`feat_` columns). `feat_fmin`/`feat_fmax` are the segment frequencies
+  (`FminVoc`/`FmaxVoc`), not the analysis band (`Fmin`/`Fmax`).
+* `Caracteristicas_normalizadas.csv`: features used in clustering, plus segment
+  identifiers and class.
+* `Membresias.csv`: GAD for every class and segment (not probabilities).
+* `Resumen.csv`: run metadata, including counts and CV index. Discarded segments
+  have no complete feature vector or class; only their count is available.
+
+These CSVs use UTF-8 with BOM for Excel and are written in blocks of 10,000 rows
+to limit export memory. CSV has no row limit; Excel can display up to 1,048,576
+rows per sheet. The following original outputs are also retained:
+
+
+* `Classification_<mm-dd-yyyy_HH-MM-SS>.csv`: same columns as the MATLAB Excel
+  (`File, Month, Day, Hour, Minute, Start, End, Length, Fdom, FminVoc, FmaxVoc, Fmin, Fmax, Class, [ClassName,] Membership`),
+  followed by `Label` (names you give in the dashboard), `SegmentID, Year, Second, Datetime, Site, Path, SampleRate, MembershipAssigned, IsRepresentative`.
+  `Class` uses MATLAB numbering: **1 = NIC** (segments not assigned to any cluster).
+* `clusters.csv`: per-class summary.
+* `arrays.npz`: raw and normalised features, memberships (GAD), prototypes, scaler.
+* `labels.csv`, `config.yaml`, `run.yaml`.
+
+## Dashboard
+
+* **Clusters**: list with each cluster's representative element; for the selected
+  cluster, its stability, cohesion, confident members, closest cluster,
+  frequency, recordings, its most representative element (spectrogram in
+  context + audio), a label form, and members sorted by membership (most
+  typical or borderline first). Click ▶ on any tile to see and hear it.
+* **Segments**: the full table with filters; click a row to see and hear it.
+* **Activity**: detections per hour for the chosen clusters.
+* **Export**: download the CSV with your labels.
+
+*Stability* re-runs LAMDA with the data in random order (LAMDA is sequential,
+so the partition depends on the order) and measures how well each cluster comes
+back (mean best Jaccard). *Cohesion* is the mean silhouette of the members.
+
+## Fidelity to the MATLAB code
+
+`pytest tests` runs unit tests and a synthetic end-to-end test. With the
+reference data, the parity test checks the port against an Excel produced by the
+original MATLAB application:
+
+```bash
+AUREAS_PARITY_AUDIO=/path/to/Jota AUREAS_PARITY_XLSX=Classification_10-23-2023_19-18-15.xlsx pytest tests
+```
+
+With `features: {fdom_mode: legacy}` it reproduces that Excel exactly (501/501
+segments, same 28 classes, memberships equal to 1e-15). The default
+(`fdom_mode: correct`) fixes the dominant-frequency bug (see below) and matches
+the corrected MATLAB version in `Aureas_MATLAB_2026` to 1e-13.
+
+## Differences from the paper / earlier MATLAB versions
+
+* **Dominant frequency fixed.** Segments are stored from high to low frequency,
+  but the old code added the row index to the *lowest* frequency, mirroring Fdom
+  inside the box (median error ≈ 400 Hz, up to 4 kHz; some values fell outside
+  the box). Sonotypes trained with the old code must be retrained.
+* **26 features**: Fdom, Fmin, Fmax + 23 cepstral coefficients (the paper says
+  27; the code drops the c0 of the first time block).
+* **NIC initialisation**: mean of the data when no band is given, 0.5 with a
+  band (`lamda.nic_init`); the paper describes 0.5.
+* **α-cut 0.8**: segments whose maximum membership is below 0.8 go to the NIC.
+* **Search**: new data are scaled with the training ranges (clipped to [0, 1]),
+  so results no longer depend on the other files in the folder.

@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "aureas"
+version = "0.1.0"
+description = "Unsupervised multi-species call recognition for passive acoustic monitoring (segmentation + LFCC + LAMDA 3-pi)"
+readme = "README.md"
+requires-python = ">=3.9"
+license = { text = "MIT" }
+authors = [{ name = "Maria J. Guerrero" }]
+dependencies = [
+    "numpy>=1.22",
+    "scipy>=1.8",
+    "pandas>=1.4",
+    "scikit-learn>=1.0",
+    "soundfile>=0.12",
+    "pyyaml>=6",
+    "matplotlib>=3.5",
+    "streamlit>=1.35",
+]
+
+[project.optional-dependencies]
+dev = ["pytest"]
+
+[project.scripts]
+aureas = "aureas.cli:main"
+
+[tool.setuptools]
+packages = ["aureas"]

@@ -1,0 +1,31 @@
+# Aureas configuration. Anything left out uses the defaults in aureas/config.py,
+# which reproduce the MATLAB application (2026 version).
+audio_dir: /path/to/recordings      # searched recursively
+results_dir: results
+channel: 1                          # 1-based, as in the MATLAB GUI
+band: null                          # [fmin, fmax] in Hz, or null for the whole spectrum
+filename_format: auto               # RECORDER_yyyymmdd_HHMMSS | yyyymmdd_HHMMSS | auto
+n_jobs: 4                           # parallel workers for segmentation
+
+# --- advanced (MATLAB values) ---------------------------------------------
+spectrogram: {nwin: 1024, noverlap: 512, nfft: 2048}
+denoising: {gaussian_sigma: 3.0, mode_smooth_span: 11}
+segmentation:
+  otsu_factor: 1.1
+  open_shape: [9, 7]                # opening, frequency x time pixels
+  close_shape: [6, 6]
+  min_area: 200
+  max_area: 40000
+  min_extent: 0.3
+  min_eccentricity: 0.5
+features: {fdom_mode: correct}      # 'legacy' reproduces the mirrored Fdom of the old MATLAB code
+lamda:
+  n_iter: 10
+  nic_init: auto                    # auto | mean | half
+  alpha_cut: 0.8
+  mad: binomial                     # marginal adequacy: binomial | gauss
+  gad: 3pi                          # global adequacy: 3pi | minmax | sumprob
+  ex_level: 1.0                     # exigency level, used by minmax and sumprob
+  matlab_sumprob: true              # sumprob as in LAMDA_unsup.m (mean MAD while learning)
+evaluation: {stability_runs: 5, confident_membership: 0.9, seed: 0}
+export: {memberships_csv: true}    # false: skip Memberships.csv (huge on big runs; kept in arrays.npz)

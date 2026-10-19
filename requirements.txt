@@ -1,0 +1,55 @@
+# ============================================================================
+#  Aureas (Python) - requirements
+# ============================================================================
+#
+#  1. Create and activate a new environment (conda):
+#
+#       conda create -n aureas python=3.11 -y
+#       conda activate aureas
+#
+#     (without conda:  python3 -m venv .venv  &&  source .venv/bin/activate)
+#
+#  2. Install the libraries (from the aureas-py folder):
+#
+#       cd aureas-py
+#       python -m pip install -r requirements.txt
+#
+#     The last line of this file ("-e .") installs the aureas package itself
+#     in editable mode: it provides the `aureas` command, and changes to the
+#     .py files take effect without reinstalling.
+#
+#  3. Check:
+#
+#       python -c "import aureas; print(aureas.__version__)"
+#
+#  4. Use:
+#
+#       aureas explore "/path/to/recordings" -o results
+#       aureas dashboard "results/<run_folder>"
+#
+#     Notebooks: open examples/*.ipynb and choose the "aureas" kernel
+#     (register it with:  python -m ipykernel install --user --name aureas)
+# ============================================================================
+
+# --- Pipeline: segmentation, features, LAMDA, results ------------------------
+numpy>=1.22
+scipy>=1.8
+pandas>=1.4
+scikit-learn>=1.0
+soundfile>=0.12
+pyyaml>=6
+matplotlib>=3.5
+openpyxl>=3.0          # read/write Excel (comparison with the MATLAB output)
+
+# --- Dashboard -----------------------------------------------------------------
+streamlit>=1.35
+
+# --- Notebooks -----------------------------------------------------------------
+jupyterlab>=4.0
+ipykernel>=6.0
+
+# --- Tests (optional) ----------------------------------------------------------
+pytest>=7.0
+
+# --- Aureas package (editable mode) --------------------------------------------
+-e .

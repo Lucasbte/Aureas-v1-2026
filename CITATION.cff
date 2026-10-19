@@ -1,0 +1,27 @@
+cff-version: 1.2.0
+message: "If you use Aureas, please cite the article below."
+title: "Aureas: unsupervised multi-species call recognition for passive acoustic monitoring (Python)"
+authors:
+  - family-names: Guerrero
+    given-names: María José
+license: MIT
+preferred-citation:
+  type: article
+  title: "Acoustic animal identification using unsupervised learning"
+  authors:
+    - family-names: Guerrero
+      given-names: Maria J.
+    - family-names: Bedoya
+      given-names: Carol L.
+    - family-names: López
+      given-names: José D.
+    - family-names: Daza
+      given-names: Juan M.
+    - family-names: Isaza
+      given-names: Claudia
+  journal: "Methods in Ecology and Evolution"
+  volume: 14
+  start: 1500
+  end: 1514
+  year: 2023
+  doi: "10.1111/2041-210X.14103"
