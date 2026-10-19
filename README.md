@@ -84,7 +84,6 @@ useful ones:
 | `lamda.mad` | `binomial` | marginal adequacy degree: `binomial` or `gauss` |
 | `lamda.gad` | `3pi` | global adequacy degree: `3pi`, `minmax` or `sumprob` |
 | `lamda.ex_level` | 1.0 | exigency level for `minmax` and `sumprob` |
-| `evaluation.stability_runs` | 5 | extra LAMDA runs in random order to measure cluster stability; set 0 on large datasets |
 | `export.memberships_csv` | `true` | write `Memberships.csv` (one column per class; can be tens of GB) |
 
 ### Large datasets
