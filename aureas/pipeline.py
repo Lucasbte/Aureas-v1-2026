@@ -253,7 +253,7 @@ def _within_stats(seg, st) -> bool:
             and abs(fdom - st[2]) <= 1.5 * st[6])
 
 
-def _lamda_known(Z, protos, allow_new, seg_info, stats, n_iter=30):
+def _lamda_known(Z, protos, allow_new, seg_info, stats, n_iter=10):
     """``mLAMDA_fuzzy_3pi_apract.m``: GADs to NIC (0.5) + fixed prototypes,
     optional new classes, and the statistics filter."""
     nP, F = protos.shape

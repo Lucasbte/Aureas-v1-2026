@@ -110,7 +110,7 @@ class LAMDA:
 
     Parameters
     ----------
-    n_iter : passes over the data (default 30; MATLAB Metodologia.m uses 10).
+    n_iter : passes over the data (default 10, as in MATLAB Metodologia.m and the paper).
     nic_init : 'mean' (NIC = mean of the data, MATLAB full-band mode),
         'half' (NIC = 0.5, paper / MATLAB band-limited mode), or 'auto'
         (decided by the pipeline: 'mean' without band, 'half' with band).
@@ -125,7 +125,7 @@ class LAMDA:
         the mean MAD (not the sumprob GAD) while learning and sumprob only for
         the final assignment. False: sumprob in both phases.
     """
-    n_iter: int = 30
+    n_iter: int = 10
     nic_init: str = "mean"
     alpha_cut: float = 0.8
     mad: str = "binomial"
