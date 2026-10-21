@@ -1,3 +1,4 @@
+LICENSE
 README.md
 pyproject.toml
 aureas/__init__.py
@@ -21,4 +22,3 @@ aureas.egg-info/dependency_links.txt
 aureas.egg-info/entry_points.txt
 aureas.egg-info/requires.txt
 aureas.egg-info/top_level.txt
-tests/test_aureas.py

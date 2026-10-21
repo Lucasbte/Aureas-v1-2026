@@ -22,7 +22,7 @@ DEFAULTS: dict = {
     "features": {"fdom_mode": "correct"},   # "legacy" only to reproduce pre-2026 MATLAB output
     # mad: binomial | gauss ; gad: 3pi | minmax | sumprob (LAMDA_unsup.m options;
     # the MATLAB app always used binomial + 3pi with ex_level 1)
-    "lamda": {"n_iter": 10, "nic_init": "auto", "alpha_cut": 0.8,
+    "lamda": {"n_iter": 30, "nic_init": "auto", "alpha_cut": 0.8,
               "mad": "binomial", "gad": "3pi", "ex_level": 1.0, "matlab_sumprob": True},
     "evaluation": {"stability_runs": 5, "confident_membership": 0.9, "seed": 0},
     # Memberships.csv has one column per class for every segment and can take
