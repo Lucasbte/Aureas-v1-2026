@@ -48,9 +48,10 @@ def dominant_frequency(seg_desc: np.ndarray, freqs_desc: np.ndarray) -> float:
     """Frequency (Hz) of the row with most energy (rows summed over time,
     5-point smoothing), for a segment stored high-to-low frequency.
 
-    This is the corrected version: the MATLAB code before 2026 added the
-    row index to the *lowest* frequency of a segment that is stored from
-    the *highest* frequency down, which mirrored Fdom inside the box.
+    Used with ``fdom_mode="correct"``. The MATLAB app adds the row index to
+    the *lowest* frequency of a segment that is stored from the *highest*
+    frequency down, which mirrors Fdom inside the box; this version returns
+    the frequency of the most energetic row itself.
     """
     prof = smooth(np.abs(seg_desc).sum(axis=1), 5)
     return float(freqs_desc[int(np.argmax(prof))])
@@ -58,7 +59,11 @@ def dominant_frequency(seg_desc: np.ndarray, freqs_desc: np.ndarray) -> float:
 
 def dominant_frequency_legacy(seg_desc: np.ndarray, f_low: float, fs: float,
                               n_rows_spec: int) -> float:
-    """Pre-2026 MATLAB Fdom (mirrored inside the box). Only for comparisons."""
+    """Fdom exactly as computed by the MATLAB app (``Segmentacion.m``):
+    lowest frequency of the box + row index counted from the top, on a
+    ``fs / 2 / n_rows_spec`` grid. Mirrored inside the box, but it is the
+    default (``fdom_mode="legacy"``) so that Python and MATLAB give the same
+    features, the same clusters and the same Fdom column."""
     s = np.abs(seg_desc)
     s = (s - s.min()) / (s.max() - s.min())
     idx = int(np.argmax(smooth(s.sum(axis=1), 5))) + 1
@@ -67,7 +72,7 @@ def dominant_frequency_legacy(seg_desc: np.ndarray, f_low: float, fs: float,
 
 
 def extract_features(S: np.ndarray, f: np.ndarray, t: np.ndarray, fs: float,
-                     events: pd.DataFrame, fdom_mode: str = "correct"):
+                     events: pd.DataFrame, fdom_mode: str = "legacy"):
     """Compute the 26-dimensional feature vector of every event.
 
     ``S`` is the complex STFT (ascending frequency rows). Events whose
