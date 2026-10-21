@@ -19,7 +19,7 @@ DEFAULTS: dict = {
         "otsu_factor": 1.1, "open_shape": [9, 7], "close_shape": [6, 6],
         "min_area": 200, "max_area": 40000, "min_extent": 0.3, "min_eccentricity": 0.5,
     },
-    "features": {"fdom_mode": "correct"},   # "legacy" only to reproduce pre-2026 MATLAB output
+    "features": {"fdom_mode": "legacy"},    # "legacy" = Fdom as computed by the MATLAB app (default, equivalent results); "correct" = un-mirrored Fdom
     # mad: binomial | gauss ; gad: 3pi | minmax | sumprob (LAMDA_unsup.m options;
     # the MATLAB app always used binomial + 3pi with ex_level 1)
     "lamda": {"n_iter": 30, "nic_init": "auto", "alpha_cut": 0.8,

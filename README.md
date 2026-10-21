@@ -74,6 +74,7 @@ useful ones:
 | `n_jobs` | 4 | parallel workers for segmentation |
 | `band` | `null` | `[fmin, fmax]` in Hz to keep only events inside a band |
 | `lamda.n_iter` | 10 | passes of LAMDA over the data |
+| `features.fdom_mode` | `legacy` | `legacy`: dominant frequency computed as in the MATLAB app (same features and clusters as MATLAB); `correct`: un-mirrored Fdom (different clusters) |
 | `lamda.mad` | `binomial` | marginal adequacy degree: `binomial` or `gauss` |
 | `lamda.gad` | `3pi` | global adequacy degree: `3pi`, `minmax` or `sumprob` |
 | `lamda.ex_level` | 1.0 | exigency level for `minmax` and `sumprob` |

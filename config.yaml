@@ -18,7 +18,7 @@ segmentation:
   max_area: 40000
   min_extent: 0.3
   min_eccentricity: 0.5
-features: {fdom_mode: correct}      # 'legacy' reproduces the mirrored Fdom of the old MATLAB code
+features: {fdom_mode: legacy}       # legacy: Fdom as in the MATLAB app (same clusters); correct: un-mirrored Fdom
 lamda:
   n_iter: 10
   nic_init: auto                    # auto | mean | half
